@@ -19,6 +19,12 @@ namespace Core.Models
         /// </summary>
         [Required]
         public string Password { get; set; }
+        
+        /// <summary>
+        /// Tipo de usuario a entrar al sistema (Permisos de usuario)
+        /// </summary>
+        [Required]
+        public TipoUsuario TipoUsuario { get; set; }
 
         /// <inheritdoc cref="BaseEntity.Validate"/>
         public override void Validate()
@@ -33,5 +39,15 @@ namespace Core.Models
                 throw new ModelException("Se requiere el Password");
             }
         }
+    }
+
+    /// <summary>
+    /// Tipo de usuarios presentes en el sistema (Clase Enum)
+    /// </summary>
+    public enum TipoUsuario
+    {
+        ADMINISTRADOR,
+        JEFE,
+        PRODUCTOR
     }
 }

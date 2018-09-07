@@ -8,15 +8,22 @@ namespace Core.Models
     /// </summary>
     public class Cliente : BaseEntity
     {
+        /// <summary>
+        /// Persona representado por el cliente
+        /// </summary>
         public Persona Persona { get; set; }
-        
+
+        /// <summary>
+        /// Contacto del cliente
+        /// </summary>
+        public int Telefono { get; set; }
+
         public override void Validate()
         {
             if (Persona == null)
             {
                 throw new ModelException("Error de autenticación");
             }
-
         }
     }
 

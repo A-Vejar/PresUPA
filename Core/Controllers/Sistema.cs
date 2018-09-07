@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core.DAO;
@@ -11,28 +12,60 @@ namespace Core.Controllers
     /// </summary>
     public sealed class Sistema : ISistema
     {
+        
+        // ---------------------------------------------------------------------------------------------------
         // Patron Repositorio, generalizado via Generics
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/
         private readonly IRepository<Persona> _repositoryPersona;
 
         private readonly IRepository<Usuario> _repositoryUsuario;
+        
+        // Nuevos repositorios
+        private readonly IRepository<Cotizacion> _repositoryCotizacion;
+        
+        private readonly IRepository<Cliente> _repositoryCliente;
+
+        // private int contador;
 
         /// <summary>
         /// Inicializa los repositorios internos de la clase.
         /// </summary>
-        public Sistema(IRepository<Persona> repositoryPersona, IRepository<Usuario> repositoryUsuario)
+        public Sistema(IRepository<Persona> repositoryPersona, IRepository<Usuario> repositoryUsuario,
+                IRepository<Cotizacion> repositoryCotizacion, IRepository<Cliente> repositoryCliente)
         {
             // Setter!
             _repositoryPersona = repositoryPersona ??
                                  throw new ArgumentNullException("Se requiere el repositorio de personas");
             _repositoryUsuario = repositoryUsuario ??
                                  throw new ArgumentNullException("Se requiere repositorio de usuarios");
+            
+            // Nuevos Repositorios
+            _repositoryCotizacion = repositoryCotizacion ??
+                                 throw new ArgumentNullException("Se requiere repositorio de cotizaciones");
+            _repositoryCliente = repositoryCliente ??
+                                 throw new ArgumentNullException("Se requiere repositorio de clientes");
 
             // Inicializacion del repositorio.
             _repositoryPersona.Initialize();
             _repositoryUsuario.Initialize();
+            
+            // Nuevas inicializaciones
+            _repositoryCotizacion.Initialize();
+            _repositoryCliente.Initialize();
+            
+            /*
+            var n = _repositoryCotizacion.GetAll();
+            if (n.Count == 0)
+            {
+                contador = 1;
+                var numero = n.OrderByDescending(c => c.Numero).First().Numero;
+                contador++;
+            }
+            */
         }
-
+        // ---------------------------------------------------------------------------------------------------
+        
+        // ---------------------------------------------------------------------------------------------------
         /// <inheritdoc />
         public void Save(Persona persona)
         {
@@ -114,5 +147,51 @@ namespace Core.Controllers
         {
             return _repositoryPersona.GetAll(p => p.Rut.Equals(rutEmail) || p.Email.Equals(rutEmail)).FirstOrDefault();
         }
+        // ---------------------------------------------------------------------------------------------------
+
+        
+        public void AgregarCotizacion(Cotizacion cotizacion)
+        {
+            // Verificacion de nulidad
+            if (cotizacion == null)
+            {
+                throw new ModelException("No hay datos");
+            }
+            cotizacion.ValorFinalCotizacion();
+            //cotizacion.Estado = EstadoCotizacion.MONTAJE;
+            _repositoryCotizacion.Add(cotizacion);
+        }
+
+        public IList<Cotizacion> ListarCotizaciones()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cotizacion EliminarCotizacion(string codigoCotizacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cotizacion BuscarCotizacion(string codigoCotizacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cotizacion EnviarCotizacion(string codigoCotizacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Cotizacion EditarCotizacion(string codigoCotizacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SeleccionarEstadoCotizacion(string codigoCotizacion, EstadoCotizacion estado)
+        {
+            throw new NotImplementedException();
+        }
+        
+        
     }
 }

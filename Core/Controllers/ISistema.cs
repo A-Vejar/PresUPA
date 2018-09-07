@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Core.Models;
 
@@ -8,6 +9,8 @@ namespace Core.Controllers
     /// </summary>
     public interface ISistema
     {
+        // ------------------------------------------------------------------------------------------------------
+        
         /// <summary>
         /// Operacion de sistema: Almacena una persona en el sistema.
         /// </summary>
@@ -41,5 +44,52 @@ namespace Core.Controllers
         /// <param name="rutEmail">RUT o Correo Electronico</param>
         /// <returns>La persona si existe</returns>
         Persona Find(string rutEmail);
+        
+        // ------------------------------------------------------------------------------------------------------
+        
+        /// <summary>
+        /// ISistema_OS_001: Agrega una cotizacion al sistema.
+        /// </summary>
+        /// <param name="cotizacion"></param>
+        void AgregarCotizacion(Cotizacion cotizacion);
+        
+        /// <summary>
+        /// ISistema_OS_002: Obtiene una lista de todas las cotizaciones presentes en el sistema.
+        /// </summary>
+        /// <returns></returns>
+        IList<Cotizacion> ListarCotizaciones();
+        
+        /// <summary>
+        /// ISistema_OS_003: Elimina una cotizacion especifica del sistema
+        /// </summary>
+        /// <param name="codigoCotizacion"></param>
+        Cotizacion EliminarCotizacion(string codigoCotizacion);
+      
+        /// <summary>
+        /// ISistema_OS_004: Busca una cotizacion especifica del sistema
+        /// </summary>
+        /// <param name="codigoCotizacion"></param>
+        Cotizacion BuscarCotizacion(string codigoCotizacion);
+
+        /// <summary>
+        /// ISistema_OS_005: Envia una cotizacion especifica del sistema
+        /// </summary>
+        /// <param name="codigoCotizacion"></param>
+        Cotizacion EnviarCotizacion(string codigoCotizacion);
+        
+        /// <summary>
+        /// ISistema_OS_006: Edita una cotizacion especifica del sistema
+        /// </summary>
+        /// <param name="codigoCotizacion"></param>
+        /// <returns></returns>
+        Cotizacion EditarCotizacion(string codigoCotizacion);   
+        
+        // NUEVO
+        /// <summary>
+        /// ISistema_OS_007: Establece el estado de una cotizacion
+        /// </summary>
+        /// <param name="idCotizacion"></param>
+        /// <param name="nuevoEstado"></param>
+        void SeleccionarEstadoCotizacion(string codigoCotizacion, EstadoCotizacion estado);
     }
 }

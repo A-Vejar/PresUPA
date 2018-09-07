@@ -27,8 +27,11 @@ namespace Core
             
             IRepository<Persona> personas = new ModelRepository<Persona>(dbContext);
             IRepository<Usuario> usuarios = new ModelRepository<Usuario>(dbContext);
+            // Nuevos repositorios
+            IRepository<Cotizacion> cotizaciones = new ModelRepository<Cotizacion>(dbContext);
+            IRepository<Cliente> clientes = new ModelRepository<Cliente>(dbContext);
             
-            return new Sistema(personas, usuarios);
+            return new Sistema(personas, usuarios, cotizaciones, clientes);
         }
     }
 }

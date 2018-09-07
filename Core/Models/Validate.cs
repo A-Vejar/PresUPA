@@ -1,4 +1,6 @@
 using System;
+using System.Net.Mail;
+using System.Reflection.Metadata;
 
 namespace Core.Models
 {
@@ -16,7 +18,7 @@ namespace Core.Models
         {
             if (String.IsNullOrEmpty(rut))
             {
-                throw new ModelException("Rut no valido");
+                throw new ModelException("Rut invalido");
             }
 
             try
@@ -41,6 +43,28 @@ namespace Core.Models
                 throw new ModelException("Rut no valido");
             }
 
+        }
+        
+        /// <summary>
+        /// Metodo que valida una direccion email
+        /// </summary>
+        /// <param name="email">Email a validar</param>
+        /// <exception cref="ModelException">Exception en caso de no ser valido</exception>
+        public static void ValidarEmail(string email)
+        {
+            if (String.IsNullOrEmpty(email))
+            {
+                throw new ModelException("Email invalido");
+            }
+            
+            try
+            {
+                MailAddress validarEmail = new MailAddress(email);
+            }
+            catch (FormatException)
+            {
+                throw new ModelException("Formato de email invalido");
+            }
         }
     }
 }
