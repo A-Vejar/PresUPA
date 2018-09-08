@@ -84,12 +84,17 @@ namespace Core.Controllers
         /// <returns></returns>
         Cotizacion EditarCotizacion(string codigoCotizacion);   
         
-        // NUEVO
         /// <summary>
         /// ISistema_OS_007: Establece el estado de una cotizacion
         /// </summary>
         /// <param name="idCotizacion"></param>
         /// <param name="nuevoEstado"></param>
         void SeleccionarEstadoCotizacion(string codigoCotizacion, EstadoCotizacion estado);
+        
+        /// <summary>
+        /// ISistema_OS_008: Busqueda por codigo de una cotizacion
+        /// </summary>
+        /// <param name="codigo"></param>
+        Cotizacion FindCotizacion(string codigo);
     }
 }

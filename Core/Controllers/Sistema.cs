@@ -25,7 +25,8 @@ namespace Core.Controllers
         
         private readonly IRepository<Cliente> _repositoryCliente;
 
-        // private int contador;
+        // Contador de la ID de cotizacion
+        private int contador;
 
         /// <summary>
         /// Inicializa los repositorios internos de la clase.
@@ -52,16 +53,19 @@ namespace Core.Controllers
             // Nuevas inicializaciones
             _repositoryCotizacion.Initialize();
             _repositoryCliente.Initialize();
+
             
-            /*
+            contador = 0;
             var n = _repositoryCotizacion.GetAll();
             if (n.Count == 0)
             {
-                contador = 1;
-                var numero = n.OrderByDescending(c => c.Numero).First().Numero;
+                contador = n.Count + 1;
+            }
+            else
+            {
                 contador++;
             }
-            */
+            
         }
         // ---------------------------------------------------------------------------------------------------
         
@@ -149,6 +153,11 @@ namespace Core.Controllers
         }
         // ---------------------------------------------------------------------------------------------------
 
+        /// <inheritdoc />
+        public Cotizacion FindCotizacion(string codigo)
+        {
+            return _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigo) || c.Codigo.Equals(codigo)).FirstOrDefault();
+        }
         
         public void AgregarCotizacion(Cotizacion cotizacion)
         {
@@ -157,24 +166,57 @@ namespace Core.Controllers
             {
                 throw new ModelException("No hay datos");
             }
+
+            if (cotizacion.Numero == null)
+            {
+                cotizacion.Numero = contador;
+            }
+            
             cotizacion.ValorFinalCotizacion();
-            //cotizacion.Estado = EstadoCotizacion.MONTAJE;
+            cotizacion.Estado = EstadoCotizacion.PRE_PRODUCCION;
             _repositoryCotizacion.Add(cotizacion);
         }
 
         public IList<Cotizacion> ListarCotizaciones()
         {
-            throw new NotImplementedException();
+            if (_repositoryCotizacion.GetAll().Count == null)
+            {
+                throw new ModelException("No hay datos");
+            }
+                
+            return _repositoryCotizacion.GetAll();
         }
 
+        // VOID ?
         public Cotizacion EliminarCotizacion(string codigoCotizacion)
         {
-            throw new NotImplementedException();
+            // Busqueda de codigo (Cotizacion)
+            Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
+            
+            if (cotizacion == null)
+            {
+                throw new ModelException("Codigo no encontrado");
+            }
+            
+            // Elimino del backend
+            _repositoryCotizacion.Remove(cotizacion);
+
+            return cotizacion;
         }
 
         public Cotizacion BuscarCotizacion(string codigoCotizacion)
         {
-            throw new NotImplementedException();
+            // Busqueda de codigo (Cotizacion)
+            Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
+            
+            if (cotizacion == null)
+            {
+                throw new ModelException("Codigo no encontrado");
+            }
+            else
+            {
+                return cotizacion;
+            }
         }
 
         public Cotizacion EnviarCotizacion(string codigoCotizacion)

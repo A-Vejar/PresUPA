@@ -15,7 +15,7 @@ namespace Core.Models
         /// Numero de un documento de cotizacion, determina la cantidad de cotizaciones creadas
         /// </summary>
         [Required]
-        public int? Numero { get; set; }
+        public int? Numero { get; set; } // NECESARIO ?
         
         /// <summary>
         /// Identificador de la cotización
@@ -140,11 +140,11 @@ namespace Core.Models
     /// </summary>
     public enum EstadoCotizacion
     {
-        PRE_PRODUCCION,
-        RODAJE,
-        MONTAJE,
-        POST_PRODUCCION,
-        TERMINADA
+        PRE_PRODUCCION, // Presupuesto, Investigacion (Previo a grabacion)
+        RODAJE, // Grabaciones en terreno (Toma de escenas)
+        MONTAJE, // Ediciones (OSO: Linea de tiempo del video)
+        POST_PRODUCCION, // Ediciones finales
+        EXPORTACION // Termino de video (Cotizacion) y envio a cliente
     }
 
 }
