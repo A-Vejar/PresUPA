@@ -94,7 +94,7 @@ namespace Core.Models
                 throw new ModelException("Error de formato. Numero de cotizacion nulo");
             }
 
-            // Porque no puede ser "String.IsNullOrEmpty(Codigo)" ????
+            // Puede puede ser "String.IsNullOrEmpty(Codigo)" ????
             if (Codigo == null)
             {
                 throw new ModelException("Error de formato. Codigo identificador nulo");

@@ -117,14 +117,14 @@ namespace Core.Controllers
         /// <summary>
         /// ISistema_OS_002: Obtiene todas los clientes del sistema.
         /// </summary>
-        /// <returns>The IList of Persona</returns>
+        /// <returns>The IList of clientes</returns>
         IList<Cliente> GetClientes();
 
         /// <summary>
         /// ISistema_OS_003: Guarda a un cliente en el sistema
         /// </summary>
         /// <param name="persona"></param>
-        /// <param name="password"></param>
+        /// <param name="telefono"></param>
         void AgregarCliente(Persona persona, int telefono);
 
         /// <summary>

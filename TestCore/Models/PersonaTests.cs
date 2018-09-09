@@ -62,23 +62,23 @@ namespace TestCore.Models
             
             // Error por rut null
             Assert.Equal(Assert.Throws<ModelException>(() => persona.Validate()).Message, "Rut no puede ser null");
-            // Error por rut incorrecto
-            persona.Rut = "Hola Como estas?";
             
+            // Error por rut incorrecto
+            persona.Rut = "WsaaP Bitchess";            
             Assert.Equal(Assert.Throws<ModelException>(() => persona.Validate()).Message, "Rut no valido");
-            persona.Rut = "130144918";
+            persona.Rut = "185855740";
             
             // Nombre
             Assert.Equal(Assert.Throws<ModelException>(() => persona.Validate()).Message, "Nombre no puede ser null o vacio");
-            persona.Nombre = "Diego";
+            persona.Nombre = "Ariel";
             
             // Apellido
             Assert.Equal(Assert.Throws<ModelException>(() => persona.Validate()).Message, "Apellido Paterno no puede ser null o vacio");
-            persona.Paterno = "Urrutia";
+            persona.Paterno = "Vejar";
             
             // Email
             Assert.Equal(Assert.Throws<ModelException>(() => persona.Validate()).Message, "Email no puede ser null o vacio");
-            persona.Email = "durrutia@ucn.cl";
+            persona.Email = "ariel.vejar@live.cl";
             
             _output.WriteLine(Utils.ToJson(persona));
         }
