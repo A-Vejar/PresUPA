@@ -58,12 +58,6 @@ namespace Core.Models
                 throw new ModelException("Apellido Paterno no puede ser null o vacio");
             }
 
-            // Es necesario ?????
-            if (String.IsNullOrEmpty(Materno))
-            {
-                throw new ModelException("Apellido MAterino no puede ser null o vacio");
-            }
-
             if (String.IsNullOrEmpty(Email))
             {
                 throw new ModelException("Email no puede ser null o vacio");

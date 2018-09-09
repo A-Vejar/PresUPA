@@ -42,7 +42,6 @@ namespace Core.Models
             {
                 throw new ModelException("Rut no valido");
             }
-
         }
         
         /// <summary>
@@ -56,7 +55,6 @@ namespace Core.Models
             {
                 throw new ModelException("Email invalido");
             }
-            
             try
             {
                 MailAddress validarEmail = new MailAddress(email);

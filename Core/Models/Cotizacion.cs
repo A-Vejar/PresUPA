@@ -140,6 +140,7 @@ namespace Core.Models
     /// </summary>
     public enum EstadoCotizacion
     {
+        CANCELADA,
         PRE_PRODUCCION, // Presupuesto, Investigacion (Previo a grabacion)
         RODAJE, // Grabaciones en terreno (Toma de escenas)
         MONTAJE, // Ediciones (OSO: Linea de tiempo del video)
