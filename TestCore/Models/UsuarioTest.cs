@@ -29,7 +29,7 @@ namespace TestCore.Models
         public void TestConstructor()
         {
             _output.WriteLine("Creating Usuario ..");
-            Usuario usuario = new Usuario();
+            Usuario usuario = new Usuario()
             {
             };
             

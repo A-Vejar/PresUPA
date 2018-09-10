@@ -30,7 +30,7 @@ namespace TestCore.Models
         public void TestConstructor()
         {
             _output.WriteLine("Creating Cotizacion ..");
-            Cotizacion cotizacion = new Cotizacion();
+            Cotizacion cotizacion = new Cotizacion()
             {
             };
             
@@ -64,6 +64,7 @@ namespace TestCore.Models
             // Error por Cliente null -----------------------------------------------------
             Assert.Equal(Assert.Throws<ModelException>(() => cotizacion.Validate()).Message, "Cliente inexistente");
             cotizacion.Cliente = new Cliente();
+            cotizacion.Cliente.Persona.Nombre = "Ariel Vejar";
             
             _output.WriteLine(Utils.ToJson(cotizacion));
         }
