@@ -7,7 +7,7 @@ namespace Core
 {
     public class Menu
     {
-        public static void InterfazAdmin(Sistema s, Usuario u)
+        public static void InterfazAdmin(ISistema s, Usuario u)
         {
             string a="...";
             while (!a.Equals("0"))

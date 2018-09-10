@@ -77,7 +77,7 @@ namespace Core
                 switch (u.TipoUsuario)
                 {
                     case TipoUsuario.ADMINISTRADOR:
-                        Console.WriteLine("Case 1");
+                        Menu.InterfazAdmin(sistema,u);
                         break;
                     case TipoUsuario.PRODUCTOR:
                         Console.WriteLine("Case 2");
@@ -90,7 +90,7 @@ namespace Core
                         break;
                         
                 }
-                // esto es un comentario
+                
             }
 
             }
