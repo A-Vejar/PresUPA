@@ -73,7 +73,7 @@ namespace Core
                     Console.WriteLine(e.Message);
                     return;
                 }
-
+//prueba
                 switch (u.TipoUsuario)
                 {
                     case TipoUsuario.ADMINISTRADOR:
