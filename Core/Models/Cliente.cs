@@ -24,6 +24,16 @@ namespace Core.Models
             {
                 throw new ModelException("Error de autenticación");
             }
+            
+            if (Telefono == null)
+            {
+                throw new ModelException("Error de formato. Telefono invalido");
+            }
+            
+            if (Telefono <= 0)
+            {
+                throw new ModelException("Error de formato. Telefono invalido");
+            }
         }
     }
 

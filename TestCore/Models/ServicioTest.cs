@@ -30,7 +30,7 @@ namespace TestCore.Models
         public void TestConstructor()
         {
             _output.WriteLine("Creating Servicio ..");
-            Servicio servicio = new Servicio();
+            Servicio servicio = new Servicio()
             {
             };
             
