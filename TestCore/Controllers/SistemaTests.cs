@@ -40,7 +40,7 @@ namespace TestCore.Controllers
             
             // Insert null
             {
-                Assert.Throws<ModelException>(() => sistema.AgregarPersona(null));
+                Assert.Throws<ModelException>(() => sistema.Agregar(null));
             }
             
             // Insert persona
@@ -55,7 +55,7 @@ namespace TestCore.Controllers
                     Email = "durrutia@ucn.cl"
                 };
 
-                sistema.AgregarPersona(persona);
+                sistema.Agregar(persona);
             }
             
             // GetPersonas

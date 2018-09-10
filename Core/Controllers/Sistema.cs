@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Core.DAO;
 using Core.Models;
 
@@ -52,6 +53,8 @@ namespace Core.Controllers
             _repositoryCotizacion.Initialize();
             _repositoryCliente.Initialize();
           
+            
+           //TODO: DOCUMENTAR ACÁ
             contador = 0;
             var n = _repositoryCotizacion.GetAll();
             if (n.Count == 0)
@@ -68,7 +71,7 @@ namespace Core.Controllers
         //     >> USUARIO <<
         // --------------------------------------
         /// <inheritdoc />
-        public void AgregarPersona(Persona persona)
+        public void Agregar(Persona persona)
         {
             // Verificacion si es null
             if (persona == null)
@@ -93,6 +96,7 @@ namespace Core.Controllers
         }
 
         /// <inheritdoc />
+        /// 
         public void AgregarUsuario(Persona persona, string password)
         {
             // Guardo o actualizo en el backend.

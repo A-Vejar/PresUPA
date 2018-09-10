@@ -16,7 +16,7 @@ namespace Core.Controllers
         /// ISistema_OS_001: Almacena una persona en el sistema.
         /// </summary>
         /// <param name="persona">Persona a guardar en el sistema.</param>
-        void AgregarPersona(Persona persona);
+        void Agregar(Persona persona);
 
         /// <summary>
         /// ISistema_OS_002: Obtiene todas las personas del sistema.

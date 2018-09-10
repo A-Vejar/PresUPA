@@ -17,39 +17,82 @@ namespace Core
         /// <exception cref="ModelException"></exception>
         private static void Main(string[] args)
         {
-            Console.WriteLine("Building Sistema ..");
+            Console.WriteLine("INICIANDO . . . .");
             ISistema sistema = Startup.BuildSistema();
-
-            Console.WriteLine("Creating Persona ..");
             {
                 Persona persona = new Persona()
                 {
-                    Rut = "130144918",
-                    Nombre = "Diego",
-                    Paterno = "Urrutia",
-                    Materno = "Astorga",
-                    Email = "durrutia@ucn.cl"
+                    Rut = "176288043",
+                    Nombre = "Fernando",
+                    Paterno = "Caimanque",
+                    Materno = "Maulen",
+                    Email = "fernando.caimanque@alumnos.ucn.cl"
+                };
+                
+                Usuario usuario = new Usuario()
+                {
+                    Persona = persona,
+                    Password = "00000",
+                    TipoUsuario = TipoUsuario.ADMINISTRADOR
                 };
 
                 Console.WriteLine(persona);
                 Console.WriteLine(Utils.ToJson(persona));
 
                 // Save in the repository
-                sistema.AgregarPersona(persona);
-            }
-
-            Console.WriteLine("Finding personas ..");
-            {
-                IList<Persona> personas = sistema.GetPersonas();
-                Console.WriteLine("Size: " + personas.Count);
-
-                foreach (Persona persona in personas)
+                sistema.Agregar(persona);
+                
+                try
                 {
-                    Console.WriteLine("Persona = " + Utils.ToJson(persona));
+                    sistema.AgregarUsuario(persona,usuario.Password);
                 }
+                catch (ModelException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return;
+                }
+                
+                //Ingreso
+                
+                Console.WriteLine("LOGIN: ");
+                
+                string credencial = Console.ReadLine();
+                
+                Console.WriteLine("PASSWORD: ");
+               
+                string password = Console.ReadLine();
+
+                Usuario u = null;
+            
+                try
+                {
+                    u = sistema.Login(credencial, password);          
+                }
+                catch (ModelException e)
+                {
+                    Console.WriteLine(e.Message);
+                    return;
+                }
+
+                switch (u.TipoUsuario)
+                {
+                    case TipoUsuario.ADMINISTRADOR:
+                        Console.WriteLine("Case 1");
+                        break;
+                    case TipoUsuario.PRODUCTOR:
+                        Console.WriteLine("Case 2");
+                        break;
+                    case TipoUsuario.JEFE:
+                        Console.WriteLine("Case 2");
+                        break;
+                    default:
+                        throw new ModelException("Usuario no valido");
+                        break;
+                        
+                }
+                
             }
 
-            Console.WriteLine("Done.");
+            }
         }
     }
-}

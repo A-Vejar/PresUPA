@@ -26,25 +26,21 @@ namespace Core.Models
         /// <summary>
         /// Nombre o titulo del documento de cotizacion
         /// </summary>
-        [Required]
         public string Nombre { get; set; }
         
         /// <summary>
         /// Descripcion general de la cotización
         /// </summary>
-        [Required]
         public string Descripcion { get; set; }
         
         /// <summary>
         /// Fecha en la que se creo la cotizacion
         /// </summary>
-        [Required]
         public DateTime FechaCreacion { get; set; }
         
         /// <summary>
         /// Servicios propuestos en una cotizacion dada (Lista de servicios)
         /// </summary>
-        [Required]
         public IList<Servicio> Servicios { get; set; }
         
         /// <summary>
@@ -55,13 +51,11 @@ namespace Core.Models
         /// <summary>
         /// Cliente al cual le es asignada esta cotizacion
         /// </summary>
-        [Required]
         public Cliente Cliente { get; set; }
         
         /// <summary>
         /// Estado en que se encuentra el servicio(s) de la cotizacion
         /// </summary>
-        [Required]
         public EstadoCotizacion Estado { get; set; }
         
         /// <summary>
