@@ -22,7 +22,7 @@ namespace Core
                 Console.WriteLine("#####   PARA SALIR, MARQUE '0'  #######");
 
                 a = Console.ReadLine();
-                
+             //comment   
             }
         }
         
