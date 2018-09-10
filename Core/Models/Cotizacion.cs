@@ -85,46 +85,39 @@ namespace Core.Models
         {
             if (Numero == null)
             {
-                throw new ModelException("Error de formato. Numero de cotizacion nulo");
+                throw new ModelException("Numero no puede ser null o vacio");
             }
 
             // Puede puede ser "String.IsNullOrEmpty(Codigo)" ????
-            if (Codigo == null)
+            if (String.IsNullOrEmpty(Codigo))
             {
-                throw new ModelException("Error de formato. Codigo identificador nulo");
+                throw new ModelException("Codigo no puede ser null o vacio");
             }
             
             if (String.IsNullOrEmpty(Nombre))
             {
-                throw new ModelException("Error de formato. Nombre de cotización nulo");
+                throw new ModelException("Nombre no puede ser null o vacio");
             }
             
             if (String.IsNullOrEmpty(Descripcion))
             {
-                throw new ModelException("Error de formato. No hay descripcion de cotización asociada");
-            }
-            
-            // Mmmm... ????
-            if (FechaCreacion == null)
-            {
-                throw new ModelException("Error de formato. No hay fecha asociada a la cotizacion");
+                throw new ModelException("Descripcion no puede ser null o vacio");
             }
             
             if (Servicios == null)
             {
-                throw new ModelException("Error de formato. No hay servicios asociados a la cotizacion");
+                throw new ModelException("No se presentan servicios");
             }
             
             if (ValorFinal <= 0)
             {
-                throw new ModelException("Error de formato. Valor de cotización invalido");
+                throw new ModelException("Valor no puede ser negativo o '0'");
             }
 
             if (Cliente == null)
             {
-                throw new ModelException("Error de formato. No hay cliente asociado");
+                throw new ModelException("Cliente inexistente");
             }
-            
             
             ValidarServicio();
         }

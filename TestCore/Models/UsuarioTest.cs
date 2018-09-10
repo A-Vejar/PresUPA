@@ -38,22 +38,13 @@ namespace TestCore.Models
             usuario.Persona = new Persona();
 
             // Error por Password null
-            Assert.Equal(Assert.Throws<ModelException>(() => usuario.Validate()).Message, "Rut no puede ser null");
+            Assert.Equal(Assert.Throws<ModelException>(() => usuario.Validate()).Message, "Se requiere el Password");
             usuario.Password = BCrypt.Net.BCrypt.HashPassword("TestingPass123");
             
             // Checking de Password (Encriptada)
             Assert.True(BCrypt.Net.BCrypt.Verify("TestingPass123", usuario.Password));
             
-            _output.WriteLine(Utils.ToJson(usuario)); // ????
-            
-            /* OTRA FORMA ...
-             {
-                var personaThrow = Assert.Throws<ModelException>(() => usuario.Persona.Validate());
-                Assert.Equal("ASDAS", personaThrow.Message);
-                _output.WriteLine("asdasdas");
-            }
-            usuario.Persona = new Persona();
-            */
+            _output.WriteLine(Utils.ToJson(usuario));
         }       
     }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography.X509Certificates;
 using Core.DAO;
 using Core.Models;
@@ -158,7 +160,7 @@ namespace Core.Controllers
         // --------------------------------------
         //    >> COTIZACION <<
         // --------------------------------------
-        public void Agregar(Cotizacion cotizacion)
+        public void AgregarCotizacion(Cotizacion cotizacion)
         {
             // Verificacion de nulidad
             if (cotizacion == null)
@@ -166,18 +168,23 @@ namespace Core.Controllers
                 throw new ModelException("No hay datos");
             }
 
+            // Contador en aumento de cotizaciones -> Nº 1 en adelante
             if (cotizacion.Numero == null)
             {
                 cotizacion.Numero = contador;
             }
             
-            cotizacion.ValorFinalCotizacion();
+            //cotizacion.ValorFinalCotizacion();
+            
+            // Cotizaciones iniciales se encuentran en un principio en PRE-PRODUCCION
             cotizacion.Estado = EstadoCotizacion.PRE_PRODUCCION;
+            // Se agrega al backend
             _repositoryCotizacion.Add(cotizacion);
         }
 
         public IList<Cotizacion> ListarCotizaciones()
         {
+            // Check si hay datos 
             if (_repositoryCotizacion.GetAll().Count == null)
             {
                 throw new ModelException("No hay datos");
@@ -188,6 +195,12 @@ namespace Core.Controllers
 
         public void EliminarCotizacion(string codigoCotizacion)
         {
+            // Verificacion de nulidad
+            if (codigoCotizacion == null)
+            {
+                throw new ModelException("Codigo null");
+            }
+            
             // Busqueda de codigo (Cotizacion)
             Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
             
@@ -203,25 +216,59 @@ namespace Core.Controllers
 
         public Cotizacion BuscarCotizacion(string codigoCotizacion)
         {
+            // Verificacion de nulidad
+            if (codigoCotizacion == null)
+            {
+                throw new ModelException("Codigo null");
+            }
+            
             // Busqueda de codigo (Cotizacion)
             Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
             
-            if (cotizacion == null)
+            if (cotizacion == null) // No se encuentra ...
             {
                 throw new ModelException("Codigo no encontrado");
             }
-            else
+            else // Se encuentra ...
             {
                 return cotizacion;
             }
         }
 
-        public Cotizacion EnviarCotizacion(string codigoCotizacion, string email)
+        // https://www.youtube.com/watch?v=J2uZ5b0XZS8
+        public bool EnviarCotizacion(string codigoCotizacion, string emailTo, string emailFrom, string msj, string password)
         {
-            throw new NotImplementedException();
+            if (codigoCotizacion == null || emailTo == null || emailFrom == null || msj == null || password == null)
+            {
+                throw new ModelException("Error en envio");
+            }
+            
+            // Busqueda de codigo (Cotizacion)
+            Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
+            
+            if (cotizacion == null) // No se encuentra ...
+            {
+                throw new ModelException("Codigo no encontrado");
+            }
+            else
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient client = new SmtpClient();
+
+                message.From = new MailAddress(emailFrom);
+                message.To.Add(emailTo);
+                message.Body = msj;
+                message.Subject = "Asunto del correo / TESTING";
+                client.Host = "smtp.live.com";
+                client.Port = 587;
+                client.Credentials = new NetworkCredential(emailFrom, password);
+                client.EnableSsl = true;
+                client.Send(message);
+                return true;
+            }
         }
 
-        public void Editar(Cotizacion cotizacion)
+        public void EditarCotizacion(Cotizacion cotizacion)
         {
             if (cotizacion != null)
             {
@@ -231,9 +278,8 @@ namespace Core.Controllers
                     Console.WriteLine("Sin modificaciones");
                 }
             }
-
             Console.WriteLine("Actualizada");
-            Agregar(cotizacion);
+            AgregarCotizacion(cotizacion);
         }
 
         public void SeleccionarEstadoCotizacion(string codigoCotizacion, EstadoCotizacion estado)
@@ -246,9 +292,27 @@ namespace Core.Controllers
         // --------------------------------------
         //    >> SERVICIO DE COTIZACION <<
         // --------------------------------------
-        public void AgregarServicio(Servicio servicio, string idCotizacion)
+        public void AgregarServicio(Servicio servicio, string codigoCotizacion)
         {
-            throw new NotImplementedException();
+            if (servicio == null || codigoCotizacion == null)
+            {
+                throw new ModelException("Datos ingresados vacios"); 
+            }
+            
+            servicio.Validate(); // Check si esta todo en orden
+            
+            // Busqueda cotizacion
+            Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
+            
+            if (cotizacion == null) // No se encuentra ...
+            {
+                throw new ModelException("Codigo no encontrado");
+            }
+            else if (cotizacion != null && cotizacion.Servicios == null)
+            {
+                cotizacion.Servicios = new List<Servicio>();
+            }
+            cotizacion.Servicios.Add(servicio);
         }
 
         public void EditarServicio(Servicio servicio)
@@ -256,12 +320,12 @@ namespace Core.Controllers
             throw new NotImplementedException();
         }
 
-        public void BorrarServicio(int index, string idCotizacion)
+        public void BorrarServicio(int index, string codigoCotizacion)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Servicio> GetServicios(string idCotizacion)
+        public IList<Servicio> GetServicios(string codigoCotizacion)
         {
             throw new NotImplementedException();
         }
@@ -269,20 +333,6 @@ namespace Core.Controllers
         // --------------------------------------
         //    >> CLIENTE <<
         // --------------------------------------
-        // TODO: REVISAR SI HAY QUE AGREGARLO SI NO EXISTE
-        public void AgregarPersonaCliente(Persona persona)
-        {
-            // Verificacion si es null
-            if (persona == null)
-            {
-                throw new ModelException("Persona es null");
-            }
-
-            // Almacena la Persona en el repositorio.
-            // La validacion de los atributos ocurre en el repositorio.
-            _repositoryPersona.Add(persona);
-        }
-
         public IList<Cliente> GetClientes()
         {
             // Verificacion si es null
@@ -308,11 +358,11 @@ namespace Core.Controllers
             {
                 cliente = new Cliente()
                 {
-                    Persona =  persona
+                    Persona =  persona,
+                    Telefono = telefono
                 };
             }
-
-            cliente.Telefono = telefono;
+            //cliente.Telefono = telefono;
             
             // Almaceno en el backend
             _repositoryCliente.Add(cliente);
@@ -320,7 +370,14 @@ namespace Core.Controllers
 
         public Persona BuscarCliente(string rutEmail)
         {
-            return _repositoryPersona.GetAll(p => p.Rut.Equals(rutEmail) || p.Email.Equals(rutEmail)).FirstOrDefault();
+            if (rutEmail == null)
+            {
+                throw new ModelException("Email ingresado vacio");
+            }
+            else
+            {
+                return _repositoryPersona.GetAll(p => p.Rut.Equals(rutEmail) || p.Email.Equals(rutEmail)).FirstOrDefault();
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Core.Models
         {
             if (Persona == null)
             {
-                throw new ModelException("Error de autenticación");
+                throw new ModelException("Cliente inexistente");
             }
             
             if (Telefono == null)

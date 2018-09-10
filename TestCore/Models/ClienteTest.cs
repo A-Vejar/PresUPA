@@ -33,12 +33,14 @@ namespace TestCore.Models
             {
             };
             
-            // Usuario null
+            // Cliente null
             Assert.Equal(Assert.Throws<ModelException>(() => cliente.Validate()).Message, "Cliente inexistente");
             cliente.Persona = new Persona();
-
+            
             // Error por Telefono null
-            Assert.Equal(Assert.Throws<ModelException>(() => cliente.Validate()).Message, "Telefono no puede ser null");
+            cliente.Telefono = -12314;
+            cliente.Telefono = 0;
+            Assert.Equal(Assert.Throws<ModelException>(() => cliente.Validate()).Message, "Error de formato. Telefono invalido");
             cliente.Telefono = 975686616;
             
             _output.WriteLine(Utils.ToJson(cliente));

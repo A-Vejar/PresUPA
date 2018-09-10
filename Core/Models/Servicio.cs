@@ -38,17 +38,17 @@ namespace Core.Models
         {
             if (String.IsNullOrEmpty(Nombre))
             {
-                throw new ModelException("Nombre del servicio no puede estar vacio");
+                throw new ModelException("Nombre no puede ser null o vacio");
             }
 
             if (Cantidad <= 0)
             {
-                throw new ModelException("La cantidad de un servicio no puede ser 0");
+                throw new ModelException("Cantidad no puede ser negativo o '0'");
             }
             
             if (Valor <= 0)
             {
-                throw new ModelException("El valor de un servicio no puede ser 0");
+                throw new ModelException("Valor no puede ser negativo o '0'");
             }
         }
     }

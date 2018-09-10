@@ -53,7 +53,7 @@ namespace Core.Controllers
         /// ISistema_OS_001: Agrega una cotizacion al sistema.
         /// </summary>
         /// <param name="cotizacion"></param>
-        void Agregar(Cotizacion cotizacion);
+        void AgregarCotizacion(Cotizacion cotizacion);
         
         /// <summary>
         /// ISistema_OS_002: Obtiene una lista de todas las cotizaciones presentes en el sistema.
@@ -77,14 +77,14 @@ namespace Core.Controllers
         /// ISistema_OS_005: Envia una cotizacion especifica del sistema
         /// </summary>
         /// <param name="codigoCotizacion"></param>
-        Cotizacion EnviarCotizacion(string codigoCotizacion, string email);
+        bool EnviarCotizacion(string codigoCotizacion, string emailTo, string emailFrom, string msj, string password);
         
         /// <summary>
         /// ISistema_OS_006: Edita una cotizacion especifica del sistema
         /// </summary>
         /// <param name="codigoCotizacion"></param>
         /// <returns></returns>
-        void Editar(Cotizacion cotizacion);   
+        void EditarCotizacion(Cotizacion cotizacion);   
         
         /// <summary>
         /// ISistema_OS_007: Establece el estado de una cotizacion
@@ -97,23 +97,17 @@ namespace Core.Controllers
         //    >> SERVICIO DE COTIZACION <<
         // --------------------------------------
         
-        void AgregarServicio(Servicio servicio, string idCotizacion);
+        void AgregarServicio(Servicio servicio, string codigoCotizacion);
 
         void EditarServicio(Servicio servicio);
 
-        void BorrarServicio(int index, string idCotizacion);        
+        void BorrarServicio(int index, string codigoCotizacion);        
 
-        IList<Servicio> GetServicios(string idCotizacion);
+        IList<Servicio> GetServicios(string codigoCotizacion);
         
         // --------------------------------------
         //    >> CLIENTE <<
         // --------------------------------------
-        /// <summary>
-        /// ISistema_OS_001: Almacena un cliente(Persona) en el sistema.
-        /// </summary>
-        /// <param name="persona">Persona a guardar en el sistema.</param>
-        void AgregarPersonaCliente(Persona persona);
-
         /// <summary>
         /// ISistema_OS_002: Obtiene todas los clientes del sistema.
         /// </summary>

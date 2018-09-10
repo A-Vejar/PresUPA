@@ -31,7 +31,7 @@ namespace Core.Models
         {
             if (Persona == null)
             {
-                throw new ModelException("Se requiere la Persona");
+                throw new ModelException("Usuario inexistente");
             }
 
             if (String.IsNullOrEmpty(Password))
