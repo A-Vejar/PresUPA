@@ -64,5 +64,12 @@ namespace Core.Models
                 throw new ModelException("Formato de email invalido");
             }
         }
+
+        public static bool CambiosCotizacion(Cotizacion c1, Cotizacion c2)
+        {
+            if (!c1.Nombre.Equals(c2.Nombre) || !c1.Cliente.Equals(c2.Cliente) || !c1.Numero.Equals(c2.Numero) ||
+                !c1.Descripcion.Equals(c1.Descripcion) || !c1.Servicios.Equals(c2.Servicios)) return false;
+            return true;
+        }
     }
 }

@@ -158,7 +158,7 @@ namespace Core.Controllers
         // --------------------------------------
         //    >> COTIZACION <<
         // --------------------------------------
-        public void AgregarCotizacion(Cotizacion cotizacion)
+        public void Agregar(Cotizacion cotizacion)
         {
             // Verificacion de nulidad
             if (cotizacion == null)
@@ -186,8 +186,7 @@ namespace Core.Controllers
             return _repositoryCotizacion.GetAll();
         }
 
-        // VOID ?
-        public Cotizacion EliminarCotizacion(string codigoCotizacion)
+        public void EliminarCotizacion(string codigoCotizacion)
         {
             // Busqueda de codigo (Cotizacion)
             Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
@@ -200,7 +199,6 @@ namespace Core.Controllers
             // Elimino del backend
             _repositoryCotizacion.Remove(cotizacion);
 
-            return cotizacion;
         }
 
         public Cotizacion BuscarCotizacion(string codigoCotizacion)
@@ -223,14 +221,26 @@ namespace Core.Controllers
             throw new NotImplementedException();
         }
 
-        public Cotizacion EditarCotizacion(string codigoCotizacion)
+        public void Editar(Cotizacion cotizacion)
         {
-            throw new NotImplementedException();
+            if (cotizacion != null)
+            {
+                Cotizacion Comparable = BuscarCotizacion(cotizacion.Codigo) ?? throw new ArgumentNullException("BuscarCotizacion(Comparable.Codigo)");
+                if (Validate.CambiosCotizacion(Comparable, cotizacion))
+                {
+                    Console.WriteLine("Sin modificaciones");
+                }
+            }
+
+            Console.WriteLine("Actualizada");
+            Agregar(cotizacion);
         }
 
         public void SeleccionarEstadoCotizacion(string codigoCotizacion, EstadoCotizacion estado)
         {
-            throw new NotImplementedException();
+            Cotizacion cotizacion = BuscarCotizacion(codigoCotizacion);
+            cotizacion.Estado = estado;
+            _repositoryCotizacion.Add(cotizacion);
         }
         
         // --------------------------------------
@@ -259,7 +269,7 @@ namespace Core.Controllers
         // --------------------------------------
         //    >> CLIENTE <<
         // --------------------------------------
-        // NOT SURE IF IT'S WORTH IT ...
+        // TODO: REVISAR SI HAY QUE AGREGARLO SI NO EXISTE
         public void AgregarPersonaCliente(Persona persona)
         {
             // Verificacion si es null
@@ -284,6 +294,7 @@ namespace Core.Controllers
         }
 
         // NOT SURE IF IT'S WORTH IT ...
+        //todo: revisar si es que es necesario
         public void AgregarCliente(Persona persona, int telefono)
         {
             // Guardo o actualizo en el backend.

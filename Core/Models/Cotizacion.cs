@@ -125,7 +125,7 @@ namespace Core.Models
                 throw new ModelException("Error de formato. No hay cliente asociado");
             }
             
-            // ... ????
+            
             ValidarServicio();
         }
     }

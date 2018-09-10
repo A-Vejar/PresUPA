@@ -53,7 +53,7 @@ namespace Core.Controllers
         /// ISistema_OS_001: Agrega una cotizacion al sistema.
         /// </summary>
         /// <param name="cotizacion"></param>
-        void AgregarCotizacion(Cotizacion cotizacion);
+        void Agregar(Cotizacion cotizacion);
         
         /// <summary>
         /// ISistema_OS_002: Obtiene una lista de todas las cotizaciones presentes en el sistema.
@@ -65,7 +65,7 @@ namespace Core.Controllers
         /// ISistema_OS_003: Elimina una cotizacion especifica del sistema
         /// </summary>
         /// <param name="codigoCotizacion"></param>
-        Cotizacion EliminarCotizacion(string codigoCotizacion);
+        void EliminarCotizacion(string codigoCotizacion);
       
         /// <summary>
         /// ISistema_OS_004: Busca una cotizacion especifica del sistema
@@ -84,7 +84,7 @@ namespace Core.Controllers
         /// </summary>
         /// <param name="codigoCotizacion"></param>
         /// <returns></returns>
-        Cotizacion EditarCotizacion(string codigoCotizacion);   
+        void Editar(Cotizacion cotizacion);   
         
         /// <summary>
         /// ISistema_OS_007: Establece el estado de una cotizacion

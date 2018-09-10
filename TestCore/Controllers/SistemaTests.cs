@@ -40,7 +40,7 @@ namespace TestCore.Controllers
             
             // Insert null
             {
-                Assert.Throws<ModelException>(() => sistema.Agregar(null));
+                Assert.Throws<ModelException>(() => sistema.Agregar((Persona) null));
             }
             
             // Insert persona
