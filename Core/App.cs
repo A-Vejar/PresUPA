@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Core.Controllers;
 using Core.Models;
 
@@ -52,47 +53,60 @@ namespace Core
                     return;
                 }
                 
-                //Ingreso
+                // Ingreso con una maximo de 3 intentos 
+                int cont = 3;
+                while (cont != 0)
+                {
+                    Console.WriteLine("LOGIN: ");
+                    string credencial = Console.ReadLine();
                 
-                Console.WriteLine("LOGIN: ");
-                
-                string credencial = Console.ReadLine();
-                
-                Console.WriteLine("PASSWORD: ");
-               
-                string password = Console.ReadLine();
+                    Console.WriteLine("PASSWORD: ");
+                    string password = Console.ReadLine();
 
-                Usuario u = null;
+                    if (credencial == "" || password == "")
+                    {
+                        Console.WriteLine("Error de ingreso");
+                        cont--;
+                        return;
+                    }
+
+                    Usuario user = null;
             
-                try
-                {
-                    u = sistema.Login(credencial, password);          
-                }
-                catch (ModelException e)
-                {
-                    Console.WriteLine(e.Message);
-                    return;
-                }
-                
-                switch (u.TipoUsuario)
-                {
-                    case TipoUsuario.ADMINISTRADOR:
-                        Menu.InterfazAdmin(sistema,u);
-                        break;
-                    case TipoUsuario.PRODUCTOR:
-                        Console.WriteLine("Case 2");
-                        break;
-                    case TipoUsuario.JEFE:
-                        Console.WriteLine("Case 2");
-                        break;
-                    default:
-                        throw new ModelException("Usuario no valido");
-                        break;
-                        
-                }
-                
-            }
+                    try
+                    {
+                        user = sistema.Login(credencial, password);          
+                    }
+                    catch (ModelException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        cont--;
+                        return;
+                    }
 
-            }
-        }
-    }
+                    cont = 3;
+                
+                    switch (user.TipoUsuario)
+                    {
+                        case TipoUsuario.ADMINISTRADOR:
+                            Console.WriteLine("Bienvenido " + persona.Nombre + " " + persona.Paterno);
+                            Menu.InterfazAdmin(sistema,user);
+                            break;
+                        case TipoUsuario.PRODUCTOR:
+                            Console.WriteLine("Bienvenido " + persona.Nombre + " " + persona.Paterno);
+                            Menu.InterfazProductor(sistema,user);
+                            break;
+                        case TipoUsuario.JEFE:
+                            Console.WriteLine("Bienvenido " + persona.Nombre + " " + persona.Paterno);
+                            Menu.InterfazJefe(sistema,user);
+                            break;
+                        default:
+                            throw new ModelException("Usuario no valido");
+                            break;
+                    }
+                } // End While
+                
+                Console.WriteLine("Program Done.");
+            } // End ISistema
+        } // End Main
+    } // End App
+}

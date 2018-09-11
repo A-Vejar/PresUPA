@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Controllers;
 using Core.Models;
+
+using System.Net.Mail;
+using System.Reflection.Metadata.Ecma335;
+using SQLitePCL;
 
 namespace Core
 {
     public class Menu
     {
+        
+        // -----------------------------------------------------------------------------
+        //    >> COTIZACION <<
+        // -----------------------------------------------------------------------------
         
         /// <summary>
         /// Despliegue en consola para crear cotizacion
@@ -104,7 +113,6 @@ namespace Core
 
             while (true)
             {
-               
                 Console.WriteLine("Elija nuevo estado de cotizacion    (Para Cancelar [0])");
                 Console.WriteLine("1. PRE_PRODUCCION");
                 Console.WriteLine("2. CANCELADA");
@@ -149,32 +157,277 @@ namespace Core
             }
         }
 
-        
-        //TODO: IMPLEMENTAR
+        /// <summary>
+        /// Despliegue en consola para editar una cotizacion especifica
+        /// </summary>
+        /// <param name="sistema"></param>
         public static void MenuEditarCotizacion(ISistema sistema)
         {
+            Cotizacion cotizacionInicial;
+            Cotizacion cotizacionSecundaria;
             Console.WriteLine("Ingrese codigo de la cotizacion");
             string codigoCotiz = Console.ReadLine();
 
+            if (String.IsNullOrEmpty(codigoCotiz))
+            {
+                throw new ModelException("Valor ingresado vacio");
+                return;
+            }
+
+            try
+            {
+                cotizacionInicial = sistema.BuscarCotizacion(codigoCotiz);
+            }
+            catch (ModelException e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            cotizacionSecundaria = new Cotizacion()
+            {
+                Numero = cotizacionInicial.Numero,
+                Codigo = cotizacionInicial.Codigo,
+                Nombre = cotizacionInicial.Nombre,
+                Descripcion = cotizacionInicial.Descripcion,
+                Servicios = cotizacionInicial.Servicios,
+                ValorFinal = cotizacionInicial.ValorFinal,
+                Cliente = cotizacionInicial.Cliente
+            };
             
+            string a="...";
+            while (!a.Equals("0"))
+            {
+                Console.WriteLine("--------------------------------------------------------------------");
+                Console.WriteLine("##############  EDITAR COTIZACION   ##################");
+                Console.WriteLine("--------------------------------------------------------------------");
+                
+                Console.WriteLine("1.Nombre");
+                Console.WriteLine("2.Descripcion");
+                Console.WriteLine("3.Servicios");
+                Console.WriteLine("4.Cliente");
+                Console.WriteLine("0.SALIR");
+
+                a = Console.ReadLine();
+                switch (a)
+                {
+                    case "1":
+                    {
+                        Console.WriteLine("Ingrese nombre de la cotizacion");
+                        cotizacionSecundaria.Nombre = Console.ReadLine();
+                        break;
+                    }
+                    case "2":
+                    {
+                        Console.WriteLine("Ingrese descripcion de la cotizacion");
+                        cotizacionSecundaria.Descripcion = Console.ReadLine();
+                        break;
+                    }
+                    case "3":
+                    {
+                        int cont = 1;
+                        Console.WriteLine("Servicios ...");
+                        foreach (Servicio s in cotizacionSecundaria.Servicios)
+                        {
+                            Console.WriteLine(cont + "." + s.ToString());
+                            cont++;
+                        }
+                        
+                        string b = "...";
+                        while (!b.Equals("0"))
+                        {
+                            Console.WriteLine("--------------------------------------------------------------------");
+                            Console.WriteLine("############## EDITAR SERVICIO ##################");
+                            Console.WriteLine("--------------------------------------------------------------------");
+
+                            Console.WriteLine("Seleccione el numero del servicio que desea editar");
+                            Console.WriteLine("0.Salir");
+
+                            b = Console.ReadLine();
+                            
+                            int num;
+                            try
+                            {
+                                num = Int32.Parse(b);
+
+                            }
+                            catch (FormatException e)
+                            {
+                                Console.WriteLine(e.Message);
+                                continue;
+                            }
+
+                            if (num >= 1 && num <= cotizacionSecundaria.Servicios.Count)
+                            {
+                                Console.WriteLine("--------------------------------------------------------------------");
+                                Console.WriteLine("############## EDITAR SERVICIO ##################");
+                                Console.WriteLine("--------------------------------------------------------------------");
+                                
+                                Console.WriteLine("1.Cambiar");
+                                Console.WriteLine("2.Eliminar");
+                                Console.Write("0.Salir");
+
+                                b = Console.ReadLine();
+                                
+                                switch (b)
+                                {
+                                    case "1":
+                                    {
+                                        cotizacionSecundaria.Servicios[num] = MenuNuevoServicio();
+                                        Console.WriteLine("Done.");
+                                        break;
+                                    }
+                                    case "2":
+                                    {
+                                        cotizacionSecundaria.Servicios.RemoveAt(num);
+                                        Console.WriteLine("Done.");
+                                        break;
+                                    }
+                                    case "0":
+                                        MenuEditarCotizacion(sistema);
+                                        break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    
+                    case "4":
+                    {
+                        Console.WriteLine("Ingrese datos del cliente");
+                        Cliente clienteSecundario = MenuNuevoCliente(sistema);
+                        if (clienteSecundario == null)
+                        {
+                            throw new ModelException("Error al ingresar datos de cliente");
+                            return;
+                        }
+                        else
+                        {
+                            cotizacionSecundaria.Cliente = clienteSecundario;
+                            Console.WriteLine("Done.");
+                        }
+                        break;
+                    }
+                    case "0":
+                        break;
+                    default:
+                        continue;
+                }
+            }
+
         }
         
-        //TODO: IMPLEMENTAR
+        /// <summary>
+        /// Metodo que despliega una busqueda de cotizacion en el sistema
+        /// </summary>
+        /// <param name="sistema"></param>
         public static void MenuBuscarCotizacion(ISistema sistema)
         {
             Console.WriteLine("Ingrese info");
             string busqueda = Console.ReadLine();
-
             
+            try
+            {
+                Cotizacion cotizaciones = sistema.BuscarCotizacion(busqueda);
+            }
+            catch (ModelException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
         
-        //TODO: IMPLEMENTAR
-        public static void MenuEnviarCotizacion(ISistema sistema)
+        /// <summary>
+        /// Metodo por el cual se envia una cotizacion por correo en el sistema
+        /// </summary>
+        /// <param name="sistema"></param>
+        public static void MenuEnviarCotizacion(ISistema sistema, Usuario usuario)
         {
+            Cotizacion cotizacion;
             Console.WriteLine("Ingrese codigo de la cotizacion");
             string codigo = Console.ReadLine();
 
+            if (codigo == null)
+            {
+                throw new ModelException("Error en ingreso de codigo");
+            }
+
+            try
+            {
+                cotizacion = sistema.BuscarCotizacion(codigo);
+            }
+            catch (ModelException e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            string emailFrom = "";
+            string emailTo = "";
+            string msj = "";
+            string password = "";
+            string msjServ = "";
             
+            Console.WriteLine("Email: " + emailFrom);
+            
+            Console.WriteLine("Desea cambiar el email ?");
+            Console.WriteLine("1.SI");
+            Console.WriteLine("2.NO");
+            
+            string b = Console.ReadLine();
+            while (!b.Equals("2"))
+            {
+                switch (b)
+                {
+                    case "1":
+                    {
+                        Console.WriteLine("Email ");
+                        emailFrom = Console.ReadLine();
+                        break;
+                    }
+                    case "2":
+                    {
+                        emailFrom = usuario.Persona.Email;
+                        break;
+                    }
+                }
+            }
+            
+            Console.WriteLine("Email: " + emailFrom);
+            Console.WriteLine("Password ");
+            password = Console.ReadLine();
+            
+
+            //Seleccion del remitente:
+            string remitente = null;
+            string input = "...";
+
+            emailTo = cotizacion.Cliente.Persona.Email;
+            
+            //Servicios de la cotizacion
+            string servicios = null;
+            foreach (Servicio servicio in cotizacion.Servicios)
+            {
+                msjServ = servicios;
+            }
+
+            //Creacion del Email:
+            msj = "Numero Cotizacion: " + cotizacion.Numero +
+                  "Codigo: " + cotizacion.Codigo +
+                  "Titulo/Nombre: " + cotizacion.Nombre +
+                  "Descripcion: " + cotizacion.Descripcion +
+                  "Servicios: " + msjServ +
+                  "Valor Final: " + cotizacion.ValorFinalCotizacion();
+            Console.WriteLine();
+
+            try
+            {
+                sistema.EnviarCotizacion(codigo, emailTo, emailFrom, msj, password);
+                Console.WriteLine("Done.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
         
         /// <summary>
@@ -197,7 +450,9 @@ namespace Core
             
         }
         
-        
+        // -----------------------------------------------------------------------------
+        //    >> SERVICIO <<
+        // -----------------------------------------------------------------------------
         /// <summary>
         /// Metodo que retorna un servicio nuevo
         /// </summary>
@@ -217,11 +472,13 @@ namespace Core
             {
                 Comentario = comentario,
                 Cantidad = cant,
-                Valor = costo,
+                Valor = costo
             };
         }
         
-        
+        // -----------------------------------------------------------------------------
+        //    >> CLIENTE <<
+        // -----------------------------------------------------------------------------
         /// <summary>
         /// Metodo que retorna un cliente nuevo.
         /// </summary>
@@ -270,13 +527,18 @@ namespace Core
             return sistema.BuscarCliente(personaCreada.Rut);
         }
         
-        
+        // -----------------------------------------------------------------------------
+        //    >> LOGIN ADMINISTRADOR <<
+        // -----------------------------------------------------------------------------
         public static void InterfazAdmin(ISistema sistema, Usuario u)
         {
             string a="...";
             while (!a.Equals("0"))
             {
+                Console.WriteLine("--------------------------------------------------------------------");
                 Console.WriteLine("##############  ADMINISTRACION DE COTIZACIONES   ##################");
+                Console.WriteLine("--------------------------------------------------------------------");
+                
                 Console.WriteLine("1.Agregar");
                 Console.WriteLine("2.Borrar");
                 Console.WriteLine("3.Buscar");
@@ -323,18 +585,20 @@ namespace Core
                     case "7":
                     {
                         //TODO
-                        MenuEnviarCotizacion(sistema);
+                        MenuEnviarCotizacion(sistema, u);
                         break;
                     }
                     case "0":
                         return;
                     default:
-                        continue;   
-                            
+                        continue;         
                 } 
             }
         }
        
+        // -----------------------------------------------------------------------------
+        //    >> LOGIN PRODUCTOR <<
+        // -----------------------------------------------------------------------------
         public static void InterfazProductor(ISistema sistema, Usuario u)
         {
             string input = "...";
@@ -359,6 +623,9 @@ namespace Core
             } 
         }
         
+        // -----------------------------------------------------------------------------
+        //    >> LOGIN JEFE <<
+        // -----------------------------------------------------------------------------
         public static void InterfazJefe(ISistema ssistema, Usuario u)
         {
             string input = "...";
