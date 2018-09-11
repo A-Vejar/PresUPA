@@ -150,20 +150,206 @@ namespace Core
         }
 
         
-        //TODO: IMPLEMENTAR
+        
         public static void MenuEditarCotizacion(ISistema sistema)
         {
             Console.WriteLine("Ingrese codigo de la cotizacion");
             string codigoCotiz = Console.ReadLine();
+            
+             Cotizacion anterior;
+            try
+            {
+                anterior = sistema.BuscarCotizacion(codigoCotiz);
+            }
+            catch (ModelException e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
 
+            //Se copia en una nueva instancia
+            Cotizacion temp = new Cotizacion()
+            {
+                Codigo = anterior.Codigo,
+                Nombre = anterior.Nombre,
+                Descripcion = anterior.Descripcion,
+                Numero = anterior.Numero,
+                Cliente = anterior.Cliente,
+                Servicios = anterior.Servicios,
+                ValorFinal = anterior.ValorFinal,    
+            };
+            
+            bool exit = false;
+            while (true)
+            {
+               
+                Console.WriteLine(temp.ToString());
+                
+                Console.WriteLine("1.Cambiar Nombre");
+                Console.WriteLine("Cambiar descripcion");
+                Console.WriteLine("3.Cambiar cliente");
+                Console.WriteLine("4.Cambiar servicios");
+                Console.WriteLine("5.Guardar cambios");
+                Console.WriteLine("6.Cancelar");
+                
+                string input = Console.ReadLine();
+               
+                switch (input)
+                {
+                    case "1":
+                    {
+                        Console.WriteLine("Ingrese nombre:");
+                        temp.Nombre = Console.ReadLine();
+                        break;
+                    }
+                    case "2":
+                    {
+                        Console.WriteLine("Ingrese descricion:");
+                        temp.Descripcion = Console.ReadLine();
+                        break;
+                    }
+                    case "3":
+                    {
+                        Console.WriteLine("Ingrese a cliente:");
+                        Cliente nuevoCliente = MenuNuevoCliente(sistema);
+                        
+                        while (nuevoCliente == null)
+                        {
+                            Console.WriteLine("Error de ingreso de cliente");
+                            Console.WriteLine("1. Intentar otra vez");
+                            Console.WriteLine("Cacncelar (otro)");
+
+                            input = Console.ReadLine();
+
+                            if (input == "1")
+                                nuevoCliente = MenuNuevoCliente(sistema);
+                            else
+                                break;
+                        }
+
+                        if (nuevoCliente != null)
+                        {
+                            temp.Cliente = nuevoCliente;
+                            Console.WriteLine("Cliente actualizado.");
+                        }
+                        else
+                            Console.WriteLine("Cambio cancelado.");
+                        break;
+                    }
+                    case "4":
+                    {
+                        Console.WriteLine("Servicios: " + temp.Servicios.Count);
+                        int index = 0;
+                        foreach (Servicio s in temp.Servicios)
+                        {
+                            
+                            Console.WriteLine("Indice: " + (++index));
+                            Console.WriteLine(++index + "  |  " +s.ToString());
+                        }
+                        
+
+                        //TODO: Terminar esto!
+                        while (true)
+                        {
+                            Console.WriteLine("Ingrese el indice del servicio");
+                            Console.WriteLine("Cancelar (otro)");
+                            int editIndex = 0;
+                            try
+                            {
+                                editIndex = int.Parse(Console.ReadLine());
+                                
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                continue;
+                            }
+
+                            if (editIndex >= 1 && editIndex <= temp.Servicios.Count)
+                            {
+                                
+                                Console.WriteLine("1.Cambiar Servicio");
+                                Console.WriteLine("2.Borrar Servicio");
+                                Console.WriteLine("Cancelar (otro)");
+
+                                input = Console.ReadLine();
+
+                                switch (input)
+                                {
+                                    case "1":
+                                        temp.Servicios[editIndex - 1] = MenuNuevoServicio();
+                                        Console.WriteLine("Servicio cambiado.");
+                                        break;
+                                    case "2":
+                                        temp.Servicios.RemoveAt(editIndex - 1);
+                                        Console.WriteLine("Servicio borrado.");
+                                        break;
+                                    default:
+                                        continue;
+                                }
+                            }
+                            
+                            break;
+                        }
+
+
+                        break;
+                    }
+                    case "5":
+                    {
+                        try
+                        {
+                            sistema.EditarCotizacion(temp);
+                            Console.WriteLine("Cambios guardados con exito.");
+                        }
+                        catch (ModelException e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
+
+                        exit = true;
+                        break;
+                    }
+                    case "0":
+                    {
+                        exit = true;
+                        break;
+                    }
+                    default:
+                        continue;
+                }
+
+                if (exit)
+                    break;
+            }
+            
+        
             
         }
         
-        //TODO: IMPLEMENTAR
         public static void MenuBuscarCotizacion(ISistema sistema)
         {
-            Console.WriteLine("Ingrese info");
+            Console.WriteLine("Ingrese informacion de busqueda");
             string busqueda = Console.ReadLine();
+
+            try
+            {
+                IList<Cotizacion> despliegue = sistema.BusquedaCotizaciones(busqueda);
+                if (despliegue.Count ==0)
+                {
+                    Console.WriteLine("Sin resultados.");
+                }
+                
+                foreach (Cotizacion enlistada in despliegue)
+                {
+                    Console.WriteLine(enlistada.ToString());
+                } 
+                
+            }
+            catch (ModelException e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             
         }
@@ -351,7 +537,6 @@ namespace Core
                     case null:
                         continue;
                     case "1":
-                        //TODO
                         break;
                     default:
                         continue;
@@ -375,7 +560,6 @@ namespace Core
                     case null:
                         continue;
                     case "1":
-                        //TODO
                         break;
                     default:
                         continue;

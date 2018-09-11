@@ -1,12 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Security.Cryptography.X509Certificates;
 using Core.DAO;
 using Core.Models;
+using System.Text;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
 
 namespace Core.Controllers
 {
@@ -56,7 +57,7 @@ namespace Core.Controllers
             _repositoryCliente.Initialize();
           
             
-           //TODO: DOCUMENTAR ACÁ
+           
             contador = 0;
             var n = _repositoryCotizacion.GetAll();
             if (n.Count == 0)
@@ -234,6 +235,29 @@ namespace Core.Controllers
                 return cotizacion;
             }
         }
+        
+        public IList<Cotizacion> BusquedaCotizaciones(string busqueda)
+        {
+            if (string.IsNullOrEmpty(busqueda))
+                throw new ModelException("El termino de busqueda no puede ser vacio");
+
+            if (_repositoryCotizacion.GetAll().Count == 0)
+            {
+                throw new NullReferenceException("no hay elementos en repositorio");
+            }
+            
+            IList<Cotizacion> cotizaciones = _repositoryCotizacion.GetAll(
+                res => res.Nombre.Contains(busqueda) || res.Descripcion.Contains(busqueda) || 
+                     res.Codigo.Contains(busqueda) || res.ValorFinal.ToString().Contains(busqueda) ||  
+                     res.FechaCreacion.ToShortDateString().Contains(busqueda) || res.Estado.ToString().Contains(busqueda) ||
+                     res.Cliente.Persona.Nombre.Contains(busqueda) ||
+                     res.Cliente.Persona.Paterno.Contains(busqueda) || res.Cliente.Persona.Materno.Contains(busqueda) ||
+                     res.Cliente.Persona.Rut.Contains(busqueda) || res.Cliente.Persona.Email.Contains(busqueda)
+                     
+            );
+            
+            return cotizaciones;
+        }
 
         // https://www.youtube.com/watch?v=J2uZ5b0XZS8
         public bool EnviarCotizacion(string codigoCotizacion, string emailTo, string emailFrom, string msj, string password)
@@ -299,7 +323,7 @@ namespace Core.Controllers
                 throw new ModelException("Datos ingresados vacios"); 
             }
             
-            servicio.Validate(); // Check si esta todo en orden
+            servicio.Validate();
             
             // Busqueda cotizacion
             Cotizacion cotizacion = _repositoryCotizacion.GetAll(c => c.Codigo.Equals(codigoCotizacion)).FirstOrDefault();
@@ -344,7 +368,6 @@ namespace Core.Controllers
         }
 
         // NOT SURE IF IT'S WORTH IT ...
-        //todo: revisar si es que es necesario
         public void AgregarCliente(Persona persona, int telefono)
         {
             // Guardo o actualizo en el backend.

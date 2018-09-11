@@ -73,6 +73,8 @@ namespace Core.Controllers
         /// <param name="codigoCotizacion"></param>
         Cotizacion BuscarCotizacion(string codigoCotizacion);
 
+        IList<Cotizacion> BusquedaCotizaciones(string busqueda);
+
         /// <summary>
         /// ISistema_OS_005: Envia una cotizacion especifica del sistema
         /// </summary>
