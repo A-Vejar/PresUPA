@@ -15,7 +15,7 @@ namespace Core.Models
         /// Numero de un documento de cotizacion, determina la cantidad de cotizaciones creadas
         /// </summary>
         [Required]
-        public int? Numero { get; set; } // NECESARIO ?
+        public int? Numero { get; set; }
         
         /// <summary>
         /// Identificador de la cotización

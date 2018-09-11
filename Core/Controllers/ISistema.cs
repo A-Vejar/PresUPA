@@ -126,6 +126,6 @@ namespace Core.Controllers
         /// </summary>
         /// <param name="rutEmail">RUT o Correo Electronico</param>
         /// <returns>La persona si existe</returns>
-        Persona BuscarCliente(string rutEmail);
+        Cliente BuscarCliente(string rutEmail);
     }
 }

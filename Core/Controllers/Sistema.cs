@@ -368,16 +368,21 @@ namespace Core.Controllers
             _repositoryCliente.Add(cliente);
         }
 
-        public Persona BuscarCliente(string rutEmail)
+        public Cliente BuscarCliente(string rutEmail)
         {
-            if (rutEmail == null)
-            {
-                throw new ModelException("Email ingresado vacio");
-            }
-            else
-            {
-                return _repositoryPersona.GetAll(p => p.Rut.Equals(rutEmail) || p.Email.Equals(rutEmail)).FirstOrDefault();
-            }
+            
+            Persona p = BuscarPersona(rutEmail);
+            if (p==null) 
+                throw new ModelException("Cliente no esta en la Base de Datos");
+            
+            Cliente cliente =_repositoryCliente.GetAll(c => c.Persona.Equals(p)).FirstOrDefault();
+
+            if (cliente != null)
+                return cliente;
+            int fonoPorDefecto = 0000;
+            
+            AgregarCliente(p,fonoPorDefecto);
+            return cliente;
         }
     }
 }

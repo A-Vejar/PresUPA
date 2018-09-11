@@ -27,7 +27,7 @@ namespace Core.Models
         public string Paterno { get; set; }
 
         /// <summary>
-        /// Apellido materno.,
+        /// Apellido materno.
         /// </summary>
         public string Materno { get; set; }
 
