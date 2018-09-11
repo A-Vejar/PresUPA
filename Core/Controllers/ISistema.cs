@@ -101,11 +101,6 @@ namespace Core.Controllers
         
         void AgregarServicio(Servicio servicio, string codigoCotizacion);
 
-        void EditarServicio(Servicio servicio);
-
-        void BorrarServicio(int index, string codigoCotizacion);        
-
-        IList<Servicio> GetServicios(string codigoCotizacion);
         
         // --------------------------------------
         //    >> CLIENTE <<

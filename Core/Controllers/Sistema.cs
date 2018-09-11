@@ -5,9 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using Core.DAO;
 using Core.Models;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Query.Expressions;
+
 
 namespace Core.Controllers
 {
@@ -163,10 +161,10 @@ namespace Core.Controllers
         // --------------------------------------
         public void AgregarCotizacion(Cotizacion cotizacion)
         {
-            // Verificacion de nulidad
+            // Se verifica si es null
             if (cotizacion == null)
             {
-                throw new ModelException("No hay datos");
+                throw new ModelException("No hay datos, cotizacion nula");
             }
 
             // Contador en aumento de cotizaciones -> Nº 1 en adelante
@@ -339,20 +337,6 @@ namespace Core.Controllers
             cotizacion.Servicios.Add(servicio);
         }
 
-        public void EditarServicio(Servicio servicio)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void BorrarServicio(int index, string codigoCotizacion)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IList<Servicio> GetServicios(string codigoCotizacion)
-        {
-            throw new NotImplementedException();
-        }
 
         // --------------------------------------
         //    >> CLIENTE <<

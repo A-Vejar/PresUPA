@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Core.Controllers;
 using Core.Models;
 
-using System.Net.Mail;
-using System.Reflection.Metadata.Ecma335;
-using SQLitePCL;
 
 namespace Core
 {
@@ -323,17 +319,28 @@ namespace Core
         /// <param name="sistema"></param>
         public static void MenuBuscarCotizacion(ISistema sistema)
         {
-            Console.WriteLine("Ingrese info");
+            Console.WriteLine("Ingrese informacion de busqueda");
             string busqueda = Console.ReadLine();
-            
+
             try
             {
-                Cotizacion cotizaciones = sistema.BuscarCotizacion(busqueda);
+                IList<Cotizacion> despliegue = sistema.BusquedaCotizaciones(busqueda);
+                if (despliegue.Count ==0)
+                {
+                    Console.WriteLine("Sin resultados.");
+                }
+                
+                foreach (Cotizacion enlistada in despliegue)
+                {
+                    Console.WriteLine(enlistada.ToString());
+                } 
+                
             }
             catch (ModelException e)
             {
                 Console.WriteLine(e.Message);
             }
+
         }
         
         /// <summary>
@@ -568,12 +575,10 @@ namespace Core
                     }
                     case "4":
                     {
-                        //TODO
                         MenuEditarCotizacion(sistema);
                         break;
                     }
                     case "5":
-                       //TODO
                         MenuCambiarEstadoCotizacion(sistema);
                         break;
                     
@@ -584,7 +589,6 @@ namespace Core
                     }
                     case "7":
                     {
-                        //TODO
                         MenuEnviarCotizacion(sistema, u);
                         break;
                     }
@@ -601,21 +605,25 @@ namespace Core
         // -----------------------------------------------------------------------------
         public static void InterfazProductor(ISistema sistema, Usuario u)
         {
-            string input = "...";
-            while (input != null && !input.Equals("0"))
+            string a = "...";
+            while (a != null && !a.Equals("0"))
             {
 
-                Console.WriteLine("1. Administrar Servicios");
+                Console.WriteLine("1. Editar estado de cotizacion");
+                Console.WriteLine("2. Ver cotizaciones disponibles");
                 Console.WriteLine("0. SALIR");
 
-                input = Console.ReadLine();
+                a = Console.ReadLine();
                 
-                switch (input)
+                switch (a)
                 {
                     case null:
                         continue;
                     case "1":
-                        //TODO
+                        MenuCambiarEstadoCotizacion(sistema);
+                        break;
+                    case "2":
+                        MenuVerCotizacion(sistema);
                         break;
                     default:
                         continue;
@@ -626,23 +634,23 @@ namespace Core
         // -----------------------------------------------------------------------------
         //    >> LOGIN JEFE <<
         // -----------------------------------------------------------------------------
-        public static void InterfazJefe(ISistema ssistema, Usuario u)
+        public static void InterfazJefe(ISistema sistema, Usuario u)
         {
-            string input = "...";
-            while (input != null && !input.Equals("0"))
+            string a = "...";
+            while (a != null && !a.Equals("0"))
             {
                 
-                Console.WriteLine("1. Ver Cotizaciones");
+                Console.WriteLine("1. Ver Cotizaciones disponibles");
                 Console.WriteLine("0. SALIR");
 
-                input = Console.ReadLine();
+                a = Console.ReadLine();
 
-                switch (input)
+                switch (a)
                 {
                     case null:
                         continue;
                     case "1":
-                        //TODO
+                        MenuVerCotizacion(sistema);
                         break;
                     default:
                         continue;

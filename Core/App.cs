@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using Core.Controllers;
 using Core.Models;
 
@@ -21,6 +19,8 @@ namespace Core
             Console.WriteLine("INICIANDO . . . .");
             ISistema sistema = Startup.BuildSistema();
             {
+                //Prueba de creacion de usuario
+                
                 Persona persona = new Persona()
                 {
                     Rut = "176288043",

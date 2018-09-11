@@ -45,10 +45,10 @@ namespace Core.Models
         }
         
         /// <summary>
-        /// Metodo que valida una direccion email
+        /// Metodo para validar una direccion de correo
         /// </summary>
         /// <param name="email">Email a validar</param>
-        /// <exception cref="ModelException">Exception en caso de no ser valido</exception>
+        /// <exception cref="ModelException">Exception en caso de no ser valido para el sistema</exception>
         public static void ValidarEmail(string email)
         {
             if (String.IsNullOrEmpty(email))
